@@ -1,0 +1,215 @@
+Project Sql Query
+
+
+select * from investors as a
+join investments as b
+on a.uuid=b.investor_uuid
+join funding_rounds as c
+on b.funding_round_uuid=c.uuid;
+
+select a.uuid,a.Name,a.Type,a.rank,a.created_at,	
+a.updated_at,a.roles,a.country_code,a.state_code,a.region,a.city,
+a.investment_count,a.founded_on,a.closed_on,a.facebook_url,a.linkedin_url,
+a.twitter_url,a.Investment_partner,is_lead_investor,b.Uuid as investment_uuid,
+b.name as investment_name,b.created_at as investment_created_at,
+b.updated_at as investment_updated_at,funding_round_uuid,
+funding_round_name,c.rank as founding_round_Rank,c.created_at as funding_round_cerated_at,
+c.updated_at as funding_round_updated_at,c.country_code as funding_country_code,
+c.state_code as funing_state_code,c.region as funding_region,c.city as funding_city,
+investment_type,c.announced_on,raised_amount_usd,investor_count
+from investors as a
+join investments as b
+on a.uuid=b.investor_uuid
+join funding_rounds as c
+on b.funding_round_uuid=c.uuid;
+
+----Count of  No. Person has  taken types of degree
+
+select degree_type,count(*) as count from degrees as a
+Right join investors as b
+on a.person_uuid=b.uuid
+group by degree_type;
+
+----Count of investor who has taken degree from particular Institute
+
+select institution_name,count(*) as count from degrees as a
+Right join investors as b
+on a.person_uuid=b.uuid
+group by institution_name;
+
+---- Count of Investor who has Taken degree from Particular Institue and Degree
+
+select institution_name,degree_type,count(*) as count from degrees as a
+Right join investors as b
+on a.person_uuid=b.uuid
+group by institution_name,Degree_Type;
+
+---- Distribution of investors between Organization and individual person
+
+Select Type,Count(*) as Count from
+(select a.uuid,a.Name,a.Type,a.rank,a.created_at,	
+a.updated_at,a.roles,a.country_code,a.state_code,a.region,a.city,
+a.investment_count,a.founded_on,a.closed_on,a.facebook_url,a.linkedin_url,
+a.twitter_url,a.Investment_partner,is_lead_investor,b.Uuid as investment_uuid,
+b.name as investment_name,b.created_at as investment_created_at,
+b.updated_at as investment_updated_at,funding_round_uuid,
+funding_round_name,c.rank as founding_round_Rank,c.created_at as funding_round_cerated_at,
+c.updated_at as funding_round_updated_at,c.country_code as funding_country_code,
+c.state_code as funing_state_code,c.region as funding_region,c.city as funding_city,
+investment_type,c.announced_on,raised_amount_usd,investor_count
+from investors as a
+join investments as b
+on a.uuid=b.investor_uuid
+join funding_rounds as c
+on b.funding_round_uuid=c.uuid) as d
+group by Type;
+
+----Top investor is From which Country 
+
+Select Name,Country_code,Raised_amount_usd,
+Dense_Rank()Over(partition by Country_Code order by Raised_amount_Usd desc) as Ranking
+from(
+select a.uuid,a.Name,a.Type,a.rank,a.created_at,	
+a.updated_at,a.roles,a.country_code,a.state_code,a.region,a.city,
+a.investment_count,a.founded_on,a.closed_on,a.facebook_url,a.linkedin_url,
+a.twitter_url,a.Investment_partner,is_lead_investor,b.Uuid as investment_uuid,
+b.name as investment_name,b.created_at as investment_created_at,
+b.updated_at as investment_updated_at,funding_round_uuid,
+funding_round_name,c.rank as founding_round_Rank,c.created_at as funding_round_cerated_at,
+c.updated_at as funding_round_updated_at,c.country_code as funding_country_code,
+c.state_code as funing_state_code,c.region as funding_region,c.city as funding_city,
+investment_type,c.announced_on,raised_amount_usd,investor_count
+from investors as a
+join investments as b
+on a.uuid=b.investor_uuid
+join funding_rounds as c
+on b.funding_round_uuid=c.uuid) as d;
+
+----Amount of fund Raised from Country,State,Region,City
+
+Select Funding_country_code,Sum(Raised_Amount_Usd) As Fund_Raised from 
+(select a.uuid,a.Name,a.Type,a.rank,a.created_at,	
+a.updated_at,a.roles,a.country_code,a.state_code,a.region,a.city,
+a.investment_count,a.founded_on,a.closed_on,a.facebook_url,a.linkedin_url,
+a.twitter_url,a.Investment_partner,is_lead_investor,b.Uuid as investment_uuid,
+b.name as investment_name,b.created_at as investment_created_at,
+b.updated_at as investment_updated_at,funding_round_uuid,
+funding_round_name,c.rank as founding_round_Rank,c.created_at as funding_round_cerated_at,
+c.updated_at as funding_round_updated_at,c.country_code as funding_country_code,
+c.state_code as funing_state_code,c.region as funding_region,c.city as funding_city,
+investment_type,c.announced_on,raised_amount_usd,investor_count
+from investors as a
+join investments as b
+on a.uuid=b.investor_uuid
+join funding_rounds as c
+on b.funding_round_uuid=c.uuid)s
+group by funding_country_code;
+
+----How may investor has Investment_partner
+
+select count(*) as Count_of_investor_has_Investment_Partner from
+(select a.uuid,a.Name,a.Type,a.rank,a.created_at,	
+a.updated_at,a.roles,a.country_code,a.state_code,a.region,a.city,
+a.investment_count,a.founded_on,a.closed_on,a.facebook_url,a.linkedin_url,
+a.twitter_url,a.Investment_partner,is_lead_investor,b.Uuid as investment_uuid,
+b.name as investment_name,b.created_at as investment_created_at,
+b.updated_at as investment_updated_at,funding_round_uuid,
+funding_round_name,c.rank as founding_round_Rank,c.created_at as funding_round_cerated_at,
+c.updated_at as funding_round_updated_at,c.country_code as funding_country_code,
+c.state_code as funing_state_code,c.region as funding_region,c.city as funding_city,
+investment_type,c.announced_on,raised_amount_usd,investor_count
+from investors as a
+join investments as b
+on a.uuid=b.investor_uuid
+join funding_rounds as c
+on b.funding_round_uuid=c.uuid) as x
+where Investment_partner=1;
+
+---- How many investor has invested in a particular Investment.
+
+select Investment_name, sum(Investor_count) as Count_of_Investor from
+(select a.uuid,a.Name,a.Type,a.rank,a.created_at,	
+a.updated_at,a.roles,a.country_code,a.state_code,a.region,a.city,
+a.investment_count,a.founded_on,a.closed_on,a.facebook_url,a.linkedin_url,
+a.twitter_url,a.Investment_partner,is_lead_investor,b.Uuid as investment_uuid,
+b.name as investment_name,b.created_at as investment_created_at,
+b.updated_at as investment_updated_at,funding_round_uuid,
+funding_round_name,c.rank as founding_round_Rank,c.created_at as funding_round_cerated_at,
+c.updated_at as funding_round_updated_at,c.country_code as funding_country_code,
+c.state_code as funing_state_code,c.region as funding_region,c.city as funding_city,
+investment_type,c.announced_on,raised_amount_usd,investor_count
+from investors as a
+join investments as b
+on a.uuid=b.investor_uuid
+join funding_rounds as c
+on b.funding_round_uuid=c.uuid) as f
+group by investment_name;
+
+---Investor Invested in which Investment_Type
+
+Select Investment_type,Count(*) as Count From
+(select a.uuid,a.Name,a.Type,a.rank,a.created_at,	
+a.updated_at,a.roles,a.country_code,a.state_code,a.region,a.city,
+a.investment_count,a.founded_on,a.closed_on,a.facebook_url,a.linkedin_url,
+a.twitter_url,a.Investment_partner,is_lead_investor,b.Uuid as investment_uuid,
+b.name as investment_name,b.created_at as investment_created_at,
+b.updated_at as investment_updated_at,funding_round_uuid,
+funding_round_name,c.rank as founding_round_Rank,c.created_at as funding_round_cerated_at,
+c.updated_at as funding_round_updated_at,c.country_code as funding_country_code,
+c.state_code as funing_state_code,c.region as funding_region,c.city as funding_city,
+investment_type,c.announced_on,raised_amount_usd,investor_count
+from investors as a
+join investments as b
+on a.uuid=b.investor_uuid
+join funding_rounds as c
+on b.funding_round_uuid=c.uuid) as s
+group by investment_type
+order by Count(*) Desc;
+
+---- How Many Investor has linkedIn Profile
+
+select * from
+(select Name as Investor_Name,count(LinkedIn_URl) as Count from 
+(select a.uuid,a.Name,a.Type,a.rank,a.created_at,	
+a.updated_at,a.roles,a.country_code,a.state_code,a.region,a.city,
+a.investment_count,a.founded_on,a.closed_on,a.facebook_url,a.linkedin_url,
+a.twitter_url,a.Investment_partner,is_lead_investor,b.Uuid as investment_uuid,
+b.name as investment_name,b.created_at as investment_created_at,
+b.updated_at as investment_updated_at,funding_round_uuid,
+funding_round_name,c.rank as founding_round_Rank,c.created_at as funding_round_cerated_at,
+c.updated_at as funding_round_updated_at,c.country_code as funding_country_code,
+c.state_code as funing_state_code,c.region as funding_region,c.city as funding_city,
+investment_type,c.announced_on,raised_amount_usd,investor_count
+from investors as a
+join investments as b
+on a.uuid=b.investor_uuid
+join funding_rounds as c
+on b.funding_round_uuid=c.uuid) as f
+group by Name) as l
+where count=1;
+
+---- How Many Investor is a lead_investor
+
+select Name as Investor_Name,Investment_type,Country_Code,State_code,
+Region,City,Sum(Raised_amount_usd) as Invested_amount from
+(select a.uuid,a.Name,a.Type,a.rank,a.created_at,	
+a.updated_at,a.roles,a.country_code,a.state_code,a.region,a.city,
+a.investment_count,a.founded_on,a.closed_on,a.facebook_url,a.linkedin_url,
+a.twitter_url,a.Investment_partner,is_lead_investor,b.Uuid as investment_uuid,
+b.name as investment_name,b.created_at as investment_created_at,
+b.updated_at as investment_updated_at,funding_round_uuid,
+funding_round_name,c.rank as founding_round_Rank,c.created_at as funding_round_cerated_at,
+c.updated_at as funding_round_updated_at,c.country_code as funding_country_code,
+c.state_code as funing_state_code,c.region as funding_region,c.city as funding_city,
+investment_type,c.announced_on,raised_amount_usd,investor_count
+from investors as a
+join investments as b
+on a.uuid=b.investor_uuid
+join funding_rounds as c
+on b.funding_round_uuid=c.uuid) as s
+where is_lead_investor=1
+group by Name,Country_Code,investment_type,State_code,Region,City
+Order by Sum(Raised_amount_usd) desc;
+
+
+
